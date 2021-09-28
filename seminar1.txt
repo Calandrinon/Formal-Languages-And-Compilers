@@ -1,0 +1,56 @@
+Seminar I
+
+Programming languages' specification
+
+Natural language -> ambiguity, inconsistency, incompleteness
+
+I. BNF (Backus-Naur form)
+	Language features: 
+	 1.) meta-linguistic variables (non-terminals)
+		- written between <>
+	 2.) language primitives (terminals)
+		- written without delimiters
+	 3.) meta-linguistic connectors
+		::= (by definition. equals)
+		 |  (or/alternative)
+	
+   <construct> ::= expr1 | expr2 | ... | exprn
+
+	ex1. BNF definition for all non-empty sequences of letters
+		<letter_sequence> ::= <letter> | <letter><letter_sequence>
+		<letter> ::= a | b | c | ... | z | A | B | C | ... | Z
+	
+	ex2. BNF definition for integers (both signed and unsigned) with the following constraints:
+		a.) 0 should not have a sign 
+		b.) integers of at least 2 digits should not start with 0
+		
+		<sign> ::= + | -
+		<digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+	     	<digit_sequence> ::= <digit> | <digit><digit_sequence> 
+		<first_digit_of_an_integer> ::= 1 | 2 | 3 | ... | 9
+		<signed_integer> ::= 0 | <sign><first_digit_of_an_integer><digit_sequence>
+		<unsigned_integer> ::= <first_digit_of_an_integer><digit_sequence>
+
+
+II. EBNF (Extended BNF)
+	Wirth's dialect:
+	 1.) {} repetitions (0 or more times)
+	 2.) [] optionality (0 or 1)
+	 3.) () grouping
+	============================ Changes to the original notation ================================
+	 4.) non-terminals lose the angle brackets (ex. some_variable ::= 1)
+	 5.) terminals written between quotes ("a")
+	 6.) ::= -> =	
+	 7.) (* *) comments
+	==============================================================================================
+
+	integer = "0" | ["+" | "-"]nonzero{digit}
+	digit = non_zero | "0"
+	nonzero = "1" | "2" | ... | "9"
+
+
+
+
+	 
+
+
