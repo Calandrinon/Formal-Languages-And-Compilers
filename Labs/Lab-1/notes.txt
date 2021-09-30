@@ -1,0 +1,15 @@
+problem statement and code for each exercise to be solved 
+no functions, no classes, no recursion for now
+#
+	let int a;
+	let int b;
+	check (a > b) then
+		write(a);
+	else
+		write(b);
+#
+
+https://moodle.cs.ubbcluj.ro/mod/assign/view.php?id=2546
+
+Lexical error => when a token cannot be classified
+Syntax error => when the language is improperly used
