@@ -3,9 +3,9 @@
 - classes of tokens:
 	. identifiers
 	. constants
-	. reserved words
-	. separators
-	. operators
+	. reserved words |
+	. separators     | predefined tokens
+	. operators      |
 	. can't be classified => lexical error
 
 1. detect

@@ -1,0 +1,51 @@
+Alphabet: all letters of the English alphabet (A-Z, a-z), digits and the underscore
+
+Operators: 
++ 
+-
+*
+/
+%
+=
+<
+>
+<=
+>=
++=
+-=
+++ (instead of x += 1)
+-- (same as above)
+** (power operator)
+
+
+Separators:
+space
+;  -> after each statement
+[] -> for indexing
+{} -> for scope blocks
+
+
+Reserved words:
+defvar -> for defining a variable
+deflist -> for defining a list/array
+if, else, else if     -> for conditionals
+and
+or
+not
+loop   -> for a "while" type of loop
+input, print
+
+
+Identifiers:
+letter = "a" | ... | "z" | "A" | ... | "Z"
+digit = "0" | "1" | ... | "9"
+nonzerodigit = "1" | "2" | ... | "9"
+identifier = letter | letter {(letter | digit)} 
+sign = "+" | "-"
+
+Types:
+int = [sign] nonzerodigit {digit}
+char = "'" (letter | digit) "'"
+str = """ {(letter|digit)} """
+bool = "true" | "false"
+double = [sign] ("0" | nonzerodigit {digit}) "." {digit}

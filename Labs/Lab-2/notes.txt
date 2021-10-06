@@ -1,0 +1,11 @@
+EBNF
+{} - repetition
+() - grouping
+[] - optional
+
+expression = term | expression ("+"|"-") term
+
+identifier = letter | letter{letter}{digit}
+
+
+
