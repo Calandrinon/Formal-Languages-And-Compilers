@@ -1,3 +1,5 @@
+Lexic.txt
+
 Alphabet: all letters of the English alphabet (A-Z, a-z), digits and the underscore
 
 Operators: 
