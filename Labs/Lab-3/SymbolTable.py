@@ -33,7 +33,7 @@ class SymbolTable:
     def search_element(self, element):
         key = self.ascii_hash(element)
         if self.is_key_in_table(key):
-            return ((key, self.__table[key].index(element)), element in self.__table[key])
+            return (key, self.__table[key].index(element))
         return False
 
     def __str__(self):
