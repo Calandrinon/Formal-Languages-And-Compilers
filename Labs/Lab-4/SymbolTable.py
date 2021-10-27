@@ -36,6 +36,14 @@ class SymbolTable:
             return (key, self.__table[key].index(element))
         return False
 
+    def get_element_position(self, element):
+        position = 0
+        for key in self.__table:
+            if element in self.__table[key]:
+                position += self.__table[key].index(element)
+                return position
+            position += len(self.__table[key])
+
     def __str__(self):
         return str(self.__table)
 
@@ -52,5 +60,6 @@ print("Adding \"ac\" to the symbol table... Returned value from add_element: {}"
 print("Adding \"bb\" to the symbol table... Returned value from add_element: {}".format(symbol_table.add_element("bb")))
 print("Is ac in the table? {}".format(symbol_table.search_element("ac")))
 print("Is bb in the table? {}".format(symbol_table.search_element("bb")))
+print(symbol_table.get_element_position("ac"))
 print(str(symbol_table))
 """
