@@ -58,12 +58,9 @@ class Scanner:
         for index in range(0, len(self.__file)):
             self.__file[index] = (self.__file[index], index)
         self.__space_tokenized_code = list(map(lambda line: (list(map(lambda token: (token, line[1]), re.findall(tokenization_pattern, line[0])))), self.__file))
-        print("Space tokenized code: {}".format(self.__space_tokenized_code))
         self.__space_cleared_code = list(map(lambda row: list(map(lambda token: (token[0].replace(' ', ''), token[1]), row)), self.__space_tokenized_code))
         self.__space_cleared_code = [item for sublist in self.__space_cleared_code for item in sublist]
-        print("Space cleared code: {}".format(self.__space_cleared_code))
         self.__separator_tokenized_code = list(map(lambda token: (self.extract_token_with_separators(token[0]), token[1]), self.__space_cleared_code))
-        print("Separator tokenized code: {}".format(self.__separator_tokenized_code))
 
         final_result = []
         line_number = 0
@@ -82,9 +79,8 @@ class Scanner:
 
     def scan(self):
         file_content = self.read_file()
-        print(file_content)
         tokens = self.split_in_tokens()
-        print("Tokenized code: {}".format(tokens))
+
         for token in tokens:
             if self.is_separator(token[0]):
                 self.__program_internal_form.append((token, -1, 0))
@@ -102,6 +98,6 @@ class Scanner:
                 self.__program_internal_form.append((token, position_in_symbol_table, 4))
             else:
                 print("Lexical error -> Token: {}; Line: {};".format(token[0], token[1]+1))
-                return (-1, -1)
+                return (self.__symbol_table, self.__program_internal_form, "Lexical error -> Token: {}; Line: {};".format(token[0], token[1]+1))
 
         return (self.__symbol_table, self.__program_internal_form)
