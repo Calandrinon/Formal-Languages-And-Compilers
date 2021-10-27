@@ -1,0 +1,13 @@
+defvar sum = 0, i = 0, numbers_to_be_read;
+
+print("Enter_how_many_numbers_you_want_to_sum_up");
+input("numbers_to_be_read=", numbers_to_be_read);
+
+loop i < numbers_to_be_read {
+	defvar some_number;
+	read(some_number);
+	sum += some_number;	
+	i += 1;
+}
+
+print("sum", sum);
