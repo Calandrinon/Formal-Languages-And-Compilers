@@ -1,0 +1,12 @@
+letter = "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
+digit = "0" | "1" | ... | "9"
+symbol = digit | letter
+state = letter digit
+
+set_of_states = "{" state {"," state} "}"
+alphabet = "{" symbol {"," symbol} "}"
+transition = "(" state "," state "," symbol ")"
+transitions = "{" transition { "," transition } "}"
+set_of_final_states = set_of_states
+
+finite_automata_file = set_of_states alphabet transitions set_of_final_states
