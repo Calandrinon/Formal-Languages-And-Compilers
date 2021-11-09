@@ -1,4 +1,4 @@
-class FiniteAutomata:
+class FiniteAutomaton:
     def __init__(self, filename):
         self.__filename = filename
         self.__file = None
@@ -25,7 +25,3 @@ class FiniteAutomata:
 
         return (set_of_states, alphabet, transitions, set_of_final_states)
 
-
-finite_automata = FiniteAutomata("FA.in")
-finite_automata_as_tuple = finite_automata.read_file()
-print(finite_automata_as_tuple)
