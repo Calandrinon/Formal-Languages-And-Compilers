@@ -20,7 +20,24 @@ class FiniteAutomaton:
 
         return self.__graph_of_states
 
+    def is_a_deterministic_finite_automaton(self):
+        for state in self.__automata_as_tuple[0]:
+            symbol_count = {}
+            for transition in self.__graph_of_states[state]:
+                next_state, symbol = transition
+                try:
+                    symbol_count[symbol] += 1
+                except KeyError as ke:
+                    symbol_count[symbol] = 1
+                if symbol_count[symbol] > 1:
+                    return False
+
+        return True
+
     def check_sequence(self, sequence):
+        if not self.is_a_deterministic_finite_automaton():
+            return False
+
         current_state = self.__automata_as_tuple[3]
         for symbol in sequence:
             transition_performed = False
@@ -28,6 +45,7 @@ class FiniteAutomaton:
                 if transition[1] == symbol:
                     current_state = transition[0]
                     transition_performed = True
+                    break
 
             if not transition_performed:
                 return False
@@ -54,7 +72,11 @@ class FiniteAutomaton:
         return self.__automata_as_tuple
 
 
+"""
 finite_automaton = FiniteAutomaton("FA.in")
-print(finite_automaton.read_file())
-print(finite_automaton.build_graph_of_states())
-print(finite_automaton.check_sequence("000000111"))
+print("File contents: {}".format(finite_automaton.read_file()))
+print("Graph as dictionary: {}".format(finite_automaton.build_graph_of_states()))
+print("Is the automaton deterministic? {}".format("Yes" if finite_automaton.is_a_deterministic_finite_automaton() else "No"))
+sequence = "000111"
+print("Is the sequence {} accepted? {}".format(sequence, "Yes" if finite_automaton.check_sequence(sequence) else "No"))
+"""
