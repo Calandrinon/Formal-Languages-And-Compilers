@@ -1,12 +1,19 @@
+The program checks if a finite automaton is deterministic and can accept a sequence given as input.
+The FiniteAutomaton class contains all methods for checking if the automaton is a DFA and if it accepts a string.
+
+The input file, FA.in, should be written like the following EBNF code suggests:
+
+-----------------------------------------------------------------------------------------------------------------
 letter = "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
 digit = "0" | "1" | ... | "9"
 symbol = digit | letter
-state = letter digit
+state = letter , digit
 
-set_of_states = "{" state {"," state} "}"
-alphabet = "{" symbol {"," symbol} "}"
-transition = "(" state "," state "," symbol ")"
-transitions = "{" transition { "," transition } "}"
+set_of_states = "{" , state , {"," state} , "}"
+alphabet = "{" , symbol , {"," symbol} , "}"
+transition = "(" , state , "," , state , "," , symbol , ")"
+transitions = "{" , transition , { "," transition } , "}"
 set_of_final_states = set_of_states
 
-finite_automata_file = set_of_states alphabet transitions set_of_final_states
+finite_automata_file = set_of_states , alphabet , transitions , set_of_final_states
+-----------------------------------------------------------------------------------------------------------------
