@@ -8,7 +8,9 @@ class FiniteAutomaton:
     def read_file(self):
         file_handler = open(self.__filename, "r")
         self.__file = file_handler.readlines()
-        return self.__process_file_content()
+        automata_as_tuple = self.__process_file_content()
+        self.build_graph_of_states()
+        return automata_as_tuple
 
     def build_graph_of_states(self):
         for state in self.__automata_as_tuple[0]:
@@ -35,9 +37,6 @@ class FiniteAutomaton:
         return True
 
     def check_sequence(self, sequence):
-        if not self.is_a_deterministic_finite_automaton():
-            return False
-
         current_state = self.__automata_as_tuple[3]
         for symbol in sequence:
             transition_performed = False
@@ -71,12 +70,3 @@ class FiniteAutomaton:
         self.__automata_as_tuple = (set_of_states, alphabet, transitions, initial_state, set_of_final_states)
         return self.__automata_as_tuple
 
-
-"""
-finite_automaton = FiniteAutomaton("FA.in")
-print("File contents: {}".format(finite_automaton.read_file()))
-print("Graph as dictionary: {}".format(finite_automaton.build_graph_of_states()))
-print("Is the automaton deterministic? {}".format("Yes" if finite_automaton.is_a_deterministic_finite_automaton() else "No"))
-sequence = "000111"
-print("Is the sequence {} accepted? {}".format(sequence, "Yes" if finite_automaton.check_sequence(sequence) else "No"))
-"""
