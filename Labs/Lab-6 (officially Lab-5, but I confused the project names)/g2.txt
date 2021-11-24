@@ -1,4 +1,4 @@
-math_operator relational_operator boolean_operator type list variable number mathematical_expression relational_operand relational_expression expression condition assignment input_output_statement simple_statement compound_statement statement if_statement loop_statement int str char double bool expression_to_compare
+statement math_operator relational_operator boolean_operator type list variable number mathematical_expression relational_operand relational_expression expression condition assignment input_output_statement simple_statement compound_statement if_statement loop_statement int str char double bool expression_to_compare
 "+" "-" "*" "/" "%" "**" "==" "!=" "<" "<=" ">" ">=" "and" "or" "not" "deflist" "[]" ":" ";" "defvar" "," "=" "input" "(" ")" "print" "if" "{" "}" "else" "loop"
 
 math_operator := "+" | "-" | "*" | "/" | "%" | "**"

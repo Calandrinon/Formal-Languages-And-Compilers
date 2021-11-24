@@ -6,6 +6,10 @@ class Grammar:
         self.__nonterminals = self.get_set_of_nonterminals()
         self.__terminals = self.get_set_of_terminals()
         self.__productions = self.__analyze_file_for_productions()
+        self.__start_symbol = self.__terminals[0]
+
+    def get_start_symbol(self):
+        return self.__start_symbol
 
     def read_grammar(self):
         file_handler = open(self.__filename, "r")
