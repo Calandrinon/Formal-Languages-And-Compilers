@@ -12,7 +12,7 @@ class Grammar:
         self.__filelines_with_productions = list(map(lambda line: line.strip(), file_handler.readlines()))
         self.__nonterminals = self.__filelines_with_productions[0].split(" ")
         self.__terminals = self.__filelines_with_productions[1].split(" ")
-        self.__filelines_with_productions = list(map(lambda production: production.split("="), self.__filelines_with_productions[2:]))
+        self.__filelines_with_productions = list(map(lambda production: production.split(":="), self.__filelines_with_productions[2:]))
         return self.__filelines_with_productions
 
     def remove_empty_character_from_list(self, input_list):
@@ -31,8 +31,11 @@ class Grammar:
         productions = {}
 
         for production in self.__filelines_with_productions:
+            if production == ['']:
+                continue
             production[0] = production[0].replace(" ", "")
-            production[1] = list(map(lambda x: self.remove_empty_character_from_list(x.split(" ")), production[1].strip().split("|")))
+            split_right_hand_side = production[1].strip().split("|")
+            production[1] = list(map(lambda x: self.remove_empty_character_from_list(x.split(" ")), split_right_hand_side))
             productions[production[0]] = production[1]
 
         return productions
@@ -47,7 +50,9 @@ class Grammar:
         file_productions = list(map(lambda line: line.strip(), file_handler.readlines()[2:]))
 
         for file_production in file_productions:
-            left_hand_side = file_production.split("=")[0]
+            if file_production == "":
+                continue
+            left_hand_side = file_production.split(":=")[0]
             left_hand_side_tokens = self.remove_empty_character_from_list(left_hand_side.split(" "))
             if len(left_hand_side_tokens) != 1 or left_hand_side_tokens[0] not in self.__nonterminals:
                 return False
