@@ -1,5 +1,6 @@
 from ParseException import ParseException
 
+
 class RecursiveDescentParser:
     def __init__(self, grammar, configuration):
         self.__grammar = grammar
@@ -64,7 +65,7 @@ class RecursiveDescentParser:
             self.__configuration.push_to_working_stack(new_head_of_the_working_stack)
 
             self.__grammar.get_productions_of_a_nonterminal()
-        elif self.__configuration.get_current_position() == 0  and self.__configuration.get_working_stack()[-1] == self.__grammar.get_start_symbol():
+        elif self.__configuration.get_current_position() == 0 and self.__configuration.get_working_stack()[-1] == self.__grammar.get_start_symbol():
             self.__configuration.set_state('e')
         else:
             self.__configuration.pop_from_working_stack()
