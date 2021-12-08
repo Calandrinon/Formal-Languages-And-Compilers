@@ -1,0 +1,14 @@
+defvar a, b, c, delta;
+
+input("a=", a);
+input("b=", b);
+input("c=", c);
+
+delta = b ** 2 - 4 * a * c;
+defvar x1, x2;
+x1 = (-b - sqrt(delta)) / (2 * a);
+x2 = (-b + sqrt(delta)) / (2 * a);
+
+print("x1=", x1);
+print("x2=", x2);
+

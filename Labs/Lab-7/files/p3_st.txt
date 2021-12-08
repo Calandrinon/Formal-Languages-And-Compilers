@@ -1,0 +1,1 @@
+{341: ['sum'], 48: ['0'], 105: ['i'], 1887: ['numbers_to_be_read'], 4461: ['"Enter_how_many_numbers_you_want_to_sum_up"'], 2016: ['"numbers_to_be_read="'], 1180: ['some_number'], 412: ['read'], 49: ['1'], 409: ['"sum"']}
