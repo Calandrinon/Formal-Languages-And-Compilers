@@ -5,9 +5,11 @@ class RecursiveDescentParser:
     def __init__(self, grammar, configuration):
         self.__grammar = grammar
         self.__configuration = configuration
+        self.__sequence = None
 
     def run(self, sequence):
         step = 0
+        self.__sequence = sequence
         while self.__configuration.get_state() != 'f' and self.__configuration.get_state() != 'e':
             step += 1
             head_of_the_input_stack = self.__configuration.get_input_stack()[-1]
@@ -47,8 +49,8 @@ class RecursiveDescentParser:
     def advance(self):
         self.__configuration.set_current_position(self.__configuration.get_current_position() + 1)
         head_of_the_input_stack = self.__configuration.pop_from_input_stack()
+        print("advance -> head input: {};".format(head_of_the_input_stack))
         self.__configuration.push_to_working_stack(head_of_the_input_stack)
-        print("advance -> head input: {}; current position: {}".format(head_of_the_input_stack, self.__configuration.get_current_position()))
 
     def momentary_insuccess(self):
         self.__configuration.set_state('b')
@@ -59,26 +61,30 @@ class RecursiveDescentParser:
         current_position = self.__configuration.get_current_position()
         self.__configuration.set_current_position(current_position - 1)
         self.__configuration.push_to_input_stack(terminal)
-        print("back -> current position: {}".format(current_position))
+        print("back -> current position: {}; symbol in sequence: {}".format(current_position, self.__sequence[current_position]))
 
     def another_try(self):
         print("another try")
         head_of_the_working_stack = self.__configuration.get_working_stack()[-1]
+        print("Head of the working stack: {}".format(head_of_the_working_stack))
         productions = self.__grammar.get_productions_of_a_nonterminal(head_of_the_working_stack[0])
+        print("Productions of the non-terminal '{}': {}".format(head_of_the_working_stack[0], productions))
 
         if head_of_the_working_stack[1] + 1 < len(productions):
             self.__configuration.set_state('q')
-            new_head_of_the_working_stack = productions[head_of_the_working_stack[1] + 1]
-            for _ in productions:
+            new_input_stack_content = productions[head_of_the_working_stack[1] + 1]
+            for _ in productions[head_of_the_working_stack[1]]:
                 self.__configuration.pop_from_input_stack()
 
             self.__configuration.pop_from_working_stack()
-            self.__configuration.push_to_working_stack(new_head_of_the_working_stack)
+            self.__configuration.push_to_working_stack((head_of_the_working_stack[0], head_of_the_working_stack[1] + 1))
 
-            self.__grammar.get_productions_of_a_nonterminal()
+            for index in range(len(new_input_stack_content) - 1, -1, -1):
+                self.__configuration.push_to_input_stack(new_input_stack_content[index])
         elif self.__configuration.get_current_position() == 0 and self.__configuration.get_working_stack()[-1] == self.__grammar.get_start_symbol():
             self.__configuration.set_state('e')
         else:
+            self.__configuration.set_state('b')
             self.__configuration.pop_from_working_stack()
             for _ in productions:
                 self.__configuration.pop_from_input_stack()

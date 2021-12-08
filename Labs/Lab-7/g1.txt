@@ -2,5 +2,5 @@ S A B C
 a b c
 S := a A | B C
 A := b c b
-B := b B | b
+B := b | b B
 C := c C | c
