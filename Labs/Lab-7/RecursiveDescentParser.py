@@ -24,7 +24,7 @@ class RecursiveDescentParser:
                     self.success()
                 elif head_of_the_input_stack in self.__grammar.get_set_of_nonterminals():
                     self.expand()
-                elif head_of_the_input_stack == sequence[self.__configuration.get_current_position()]:
+                elif self.__configuration.get_current_position() < len(sequence) and head_of_the_input_stack == sequence[self.__configuration.get_current_position()]:
                     self.advance()
                 else:
                     self.momentary_insuccess()
@@ -61,7 +61,7 @@ class RecursiveDescentParser:
         current_position = self.__configuration.get_current_position()
         self.__configuration.set_current_position(current_position - 1)
         self.__configuration.push_to_input_stack(terminal)
-        print("back -> current position: {}; symbol in sequence: {}".format(current_position, self.__sequence[current_position]))
+        print("back -> current position: {}; symbol in sequence: {}".format(current_position, self.__sequence[current_position - 1]))
 
     def another_try(self):
         print("another try")
@@ -85,10 +85,10 @@ class RecursiveDescentParser:
             self.__configuration.set_state('e')
         else:
             self.__configuration.set_state('b')
-            self.__configuration.pop_from_working_stack()
-            for _ in productions:
+            old_head_of_the_working_stack = self.__configuration.pop_from_working_stack()
+            for _ in productions[old_head_of_the_working_stack[1]]:
                 self.__configuration.pop_from_input_stack()
-            self.__configuration.push_to_input_stack(head_of_the_working_stack[0])
+            self.__configuration.push_to_input_stack(old_head_of_the_working_stack[0])
 
     def success(self):
         self.__configuration.set_state('f')
