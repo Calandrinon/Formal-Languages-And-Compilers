@@ -18,6 +18,8 @@ class RecursiveDescentParser:
                 step,
                 self.__configuration.get_state(), self.__configuration.get_current_position(),
                 self.__configuration.get_working_stack(), self.__configuration.get_input_stack()))
+            if head_of_the_working_stack == '$' and self.__configuration.get_state() == 'b':
+                self.__configuration.set_state('e')
 
             if self.__configuration.get_state() == 'q':
                 if self.__configuration.get_current_position() == len(sequence) and head_of_the_input_stack == '$':
@@ -35,8 +37,8 @@ class RecursiveDescentParser:
                     self.another_try()
 
         if self.__configuration.get_state() == 'e':
-            raise ParseException("An error has been detected.")
-        print("Sequence accepted.")
+            raise ParseException("An error has been detected in the sequence {}.".format(''.join(sequence)))
+        print("Sequence {} accepted.".format(''.join(sequence)))
 
     def expand(self):
         head_of_the_input_stack = self.__configuration.pop_from_input_stack()
