@@ -4,8 +4,12 @@ from ParseException import ParseException
 class RecursiveDescentParser:
     def __init__(self, grammar, configuration):
         self.__grammar = grammar
+        self.__all_productions = grammar.get_set_of_productions()
         self.__configuration = configuration
         self.__sequence = None
+        self.__parse_tree = []
+        self.__last_applied_production = None
+        self.__final_working_stack = None
 
     def run(self, sequence):
         step = 0
@@ -39,6 +43,9 @@ class RecursiveDescentParser:
         if self.__configuration.get_state() == 'e':
             raise ParseException("An error has been detected in the sequence {}.".format(''.join(sequence)))
         print("Sequence {} accepted.".format(''.join(sequence)))
+        self.__final_working_stack = self.__configuration.get_working_stack()
+        del self.__final_working_stack[0]
+        return self.__configuration.get_working_stack()
 
     def expand(self):
         head_of_the_input_stack = self.__configuration.pop_from_input_stack()
@@ -95,3 +102,10 @@ class RecursiveDescentParser:
     def success(self):
         self.__configuration.set_state('f')
         print("success")
+
+    def get_string_of_productions(self):
+        return list(filter(lambda element: type(element) is tuple, self.__final_working_stack))
+
+    def print_parse_representation(self):
+        print(self.get_string_of_productions())
+

@@ -46,8 +46,9 @@ def main():
         print("Sequence of symbols")
         print(sequence_of_symbols)
         parser.run(sequence_of_symbols)
+        print("List of applied productions:")
+        parser.print_parse_representation()
     except Exception as e:
         print(e)
-
 
 main()
