@@ -1,0 +1,92 @@
+-----------------------------------------------------------------------
+LR(1)
+-----------------------------------------------------------------------
+Ex. G=({S,A}, {a,b}, P, S)
+
+S' -> S
+P: (1) S -> AA
+   (2) A -> aA
+   (3) A -> b
+
+w = abab belongs to L(G)?
+LR(1) item [A->alpha.beta, a belongs to sigma]
+
+I. Canonical collection
+s0 = closure({[S' -> .S, $]}) = {[S' -> .S, $], [S -> .AA, $], [A -> .aA], [A -> .aA, b], [A -> .b,a], [A -> .b,b]}
+s1 = goto(s0, S) = closure({[S' -> S., $]}) = {[S' -> S., $]}
+s2 = goto(s0, A) = closure({[S -> A.A,$]}) = {[S -> A.A, $], [A -> .aA, $], [A -> .b, $]}
+s3 = goto(s0, a) = closure({[A->a.A, a], [A -> a.A, b]}) = {[A -> a.A,a], [A -> a.A, b], [A -> .aA, a], [A -> .b, a], [A -> .aA, b], [A -> .b, b]}
+s4 = goto(s0, b) = closure({[A->b., a], [A -> b., b]}) = {[A -> b., a], [A -> b., b]}
+s5 = goto(s2, A) = closure({[S -> AA., $]}) = {[S -> AA., $]}
+s6 = goto(s2, a) = closure({[A -> a.A, $]}) = {[A -> a.A, $], [A -> .aA, $], [A -> .b, $]}
+s7 = goto(s2, b) = closure({[A -> b., $]}) = {[A -> b., $]}
+s8 = goto(s3, A) = closure({[A -> aA., a], [A -> aA., b]}) = {[A -> aA., a], [A -> aA., b]}
+s9 = goto(s3, a) = closure({[A -> a.A, a], [A -> a.A, b]}) = s3   
+	 goto(s3, b) = closure({[A -> b., a], [A -> b., b]}) = s4
+     goto(s6, A) = closure({[A -> aA., $]}) = {[A -> aA., $]}
+     goto(s6, a) = closure({[A -> a.A, $]}) = s6
+     goto(s6, b) = closure({[A -> b., $]}) = s7
+
+
+
+ [ ACTION ][goto]
+    a       b       $        S       A
+0 shift3  shift4             1       2
+1                 accept
+2 shift6  shift7                     5
+3 shift3  shift4                     8
+4 reduce3 red3  
+5         reduce1
+6 shift6  shift7                     9
+7         reduce3
+8 reduce2 reduce3
+9         reduce2
+
+
+
+Working stack       Input stack     Output band
+$0                     abab$           eps
+$0a3                   bab$            eps
+$0a3[b4]               ab$             eps
+$0[a3A8]               ab$             3
+$0A2                   ab$             23
+$0A2a6                 b$              23
+$0A2a6b7               $               23
+$0A2a6A9               $               323
+$0A2A5                 $               2323 
+$0S1                   $               12323
+accept                 $               12323
+
+
+-----------------------------------------------------------------------
+LALR(1)
+-----------------------------------------------------------------------
+s0, s1, s2, s36
+
+s36 = {[A->a.A, a|b|$], [A->.aA, a|b, $], [A -> .b, a|b, $]}
+s4  = {[A -> a.A, a|b|$], [A -> .aA, a|b, $], [A -> .b, a|b,$]}
+s89 = {[A -> aA., a|b|$]}
+
+
+ [ ACTION ][goto]
+    a        b       $        S       A
+0 shift3   shift4             1       2
+1                  accept
+2 shift6   shift7                     5
+36shift36  shift47                    89
+47reduce3 reduce3 reduce3  
+5                 reduce1
+89reduce2 reduce2 
+
+
+-----------------------------------------------------------------------
+Pushdown automata (PDA)
+-----------------------------------------------------------------------
+
+FA:  M = (Q, sigma, del, q0, F)
+PDA: M = (Q, sigma, gamma, del, q0, Z0, F)
+                      |             |
+                      v             v
+                    stack        Initial stack symbols
+                    memory
+
