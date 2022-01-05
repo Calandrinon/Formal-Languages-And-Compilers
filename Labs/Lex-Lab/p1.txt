@@ -1,0 +1,14 @@
+# Compute the minimum of 3 numbers
+
+defvar a, b, c;
+input("a=", a);
+input("b=", b);
+input("c=", c);
+
+if a < b and a < c {
+	print(a);	
+} else if b < a and b < c {
+	print(b);
+} else {
+	print(c);
+}

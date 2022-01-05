@@ -1,0 +1,20 @@
+# Compute the minimum of 3 numbers (with 2 lexical errors)
+
+defvar a, b, c;
+defvar float_defined_correctly = 1.55;
+# First lexical error: real numbers have the whole part and 
+# the decimals separated by a dot, not by a comma.
+defvar float_defined_incorrectly = 1,55;
+
+input("a=", a);
+input("b=", b);
+input("c=", c);
+
+if a < b and a < c {
+	print($a); # The second lexical error: dollars are not allowed 
+		   # as symbols outside a string
+} else if b < a and b < c {
+	print(b);
+} else {
+	print(c);
+}
