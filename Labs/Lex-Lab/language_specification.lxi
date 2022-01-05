@@ -29,7 +29,7 @@ STRING \".*\"
 
 [ \t\n]+ 		/* eat up whitespace */ 
 		 
-. printf("Eroare: %s\n", yytext);
+. printf("Error: %s\n", yytext);
 %% 
 main( argc, argv ) 
 int argc; 
