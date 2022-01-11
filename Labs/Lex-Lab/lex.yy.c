@@ -817,7 +817,7 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 32 "language_specification.lxi"
-printf("Eroare: %s\n", yytext);
+printf("Error: %s\n", yytext);
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
