@@ -28,7 +28,6 @@ double pop()
 %token deflist
 %token if
 %token else
-%token else if
 %token loop
 %token input
 %token print
@@ -46,35 +45,35 @@ double pop()
 %token bool
 %token double
 
-%token and 
-%token or
-%token not
-%token +
-%token -
-%token *
-%token /
-%token %
-%token =
-%token ==
-%token '<'
-%token '>'
-%token '<='
-%token '>='
-%token +=
-%token -=
-%token ++
-%token --
-%token **
+%left and 
+%left or
+%left not
+%left '+'
+%left '-'
+%left '*'
+%left '/'
+%left '%'
+%left "=="
+%left '='
+%left '<'
+%left '>'
+%left "<="
+%left ">="
+%left "+="
+%left "-="
+%left "++"
+%left "--"
+%left "**"
 
 %type <l_val> expr_stat factor_stat constanta
 %%
 
-math_operator: "+" | "-" | "*" | "/" | "%" | "**" ;
-relational_operator: "==" | "!=" | "<" | "<=" | ">" | ">=" ;
-boolean_operator: "and" | "or" | "not" ;
+math_operator: '+' | '-' | '*' | '/' | '%' | "**" | "<=" | ">=" | "+=" | "-=" | "++" | "--" | "**" ;
+relational_operator: "==" | "!=" | '<' | "<=" | '>' | ">=" ;
+boolean_operator: and | or | not ;
 type: int | str | char | double | bool ;
-list: "deflist" identifier '[]' ':' type ';' ;
-variable: "defvar" identifier [':' type] '{' ',' identifier [':' type] '}' ';' ;
+list: deflist identifier "[]" ':' type ';' ;
+variable: defvar identifier [':' type] '{' ',' identifier [':' type] '}' ';' ;
 number: int | double ;
 mathematical_expression: number '{' math_operator number '}'
 relational_operand: identifier | int | double | mathematical_expression
@@ -86,14 +85,14 @@ expression: (mathematical_expression|relational_expression) '{' boolean_operator
 condition: expression relation expression ;
 assignment: identifier '=' expression ';' ;
 identifier_or_type: id | type
-input_output_statement: 'input' '(' identifier_or_type '{' ',' identifier_or_type '}' ')' ';' 
-					  | "print" "(" identifier_or_type '{' ',' identifier_or_type '}' ')' ';' ;
+input_output_statement: input '(' identifier_or_type '{' ',' identifier_or_type '}' ')' ';' 
+					  | print '(' identifier_or_type '{' ',' identifier_or_type '}' ')' ';' ;
 					  
 simple_statement: assignment | input_output_statement ;
 compound_statement: simple_statement '{' ';' compound_statement '}' ;
 statement: compound_statement | if_statement | loop_statement ;
-if_statement: 'if' condition '{' statement '}' [ 'else' '{' statement '}' ] ;
-loop_statement: "loop" expression { '{' statement '}' } ;
+if_statement: if condition '{' statement '}' [ else '{' statement '}' ] ;
+loop_statement: loop expression { '{' statement '}' } ;
 
 %%
 

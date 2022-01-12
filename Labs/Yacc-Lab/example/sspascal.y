@@ -120,8 +120,7 @@ factor_stat:	ID		{}
 constanta:	CONST_INT	{
 			$$ = TIP_INT;
 			push(atof($1));
-				}
-		| CONST_REAL	{
+				} | CONST_REAL	{
 			$$ = TIP_REAL;
 			push(atof($1));
 				}

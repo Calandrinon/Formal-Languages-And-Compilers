@@ -1,6 +1,76 @@
 
 %{ 	 
 #include <math.h> 
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <stdio.h>
+
+struct ProgramInternalFormNode {
+	char key[100];
+	char value[100];
+};
+
+struct SymbolTableNode {
+	char key[100];
+	int value;
+};
+
+struct ProgramInternalFormNode ProgramInternalForm[1000];
+struct SymbolTableNode SymbolTable[100];
+
+int k = 0;
+int symbolTableIndex = 0;
+
+char* insertIntoSymbolTable(char* text, int length){
+	char key[100];
+	
+	strncpy(key, text, length);
+	
+	key[length] = '\0';
+	
+	for(int i = 0; i < symbolTableIndex; i++){
+		if(!strcmp(SymbolTable[i].key, key)){
+			char buffer[10];
+ 			sprintf(buffer, "%d", SymbolTable[i].value);
+ 			char* p = buffer;
+ 			return p;
+ 		}
+	}
+	
+	struct SymbolTableNode node;
+	strcpy(node.key, key);
+	node.value = symbolTableIndex;
+	SymbolTable[symbolTableIndex++] = node;
+	
+	char buffer[10];
+	
+	sprintf(buffer, "%d", SymbolTable[symbolTableIndex - 1].value);
+	char* p = buffer;
+	return p;
+}
+
+void printSymbolTable(){
+	printf("\nSymbolTable\n");
+	for(int i = 0; i < symbolTableIndex; i++){
+		printf("%s %d\n", SymbolTable[i].key, SymbolTable[i].value);
+	}
+}
+
+void insertIntoProgramInternalForm(char* text, char* value, int length){
+	struct ProgramInternalFormNode node;
+	strncpy(node.key, text, length);
+	strcpy(node.value, value);
+	node.key[length] = '\0';
+	ProgramInternalForm[k++] = node;
+}
+
+void printProgramInternalForm() {
+	printf("\nProgramInternalForm\n");
+	for(int i = 0; i < k; i++)
+ 		printf("%s %s\n", ProgramInternalForm[i].key, ProgramInternalForm[i].value);
+}
+
 %} 
 
 DIGIT 		[0-9] 
@@ -9,27 +79,50 @@ STRING \".*\"
 
 %% 
 
-{DIGIT}+ 	printf( "An integer: %s (%d)\n", yytext, atoi( yytext ) ); 
+{DIGIT}+ 	{ 
+				printf( "An integer: %s (%d)\n", yytext, atoi( yytext ));
+				insertIntoProgramInternalForm("const", insertIntoSymbolTable(yytext, yyleng ), 5);
+			}
 
-{DIGIT}+"."{DIGIT}*  printf( "A float: %s (%g)\n", yytext, atof( yytext ) );  
+{DIGIT}+"."{DIGIT}*  { 
+						printf( "A float: %s (%g)\n", yytext, atof( yytext ) ); 
+						insertIntoProgramInternalForm("const", insertIntoSymbolTable(yytext, yyleng), 5);
+					 }
+
 "#".* printf("A comment: \"%s\"\n", yytext);
 
-"defvar"|"deflist"|"if"|"else"|"else if"|"and"|"or"|"not"|"loop" printf( "A keyword: %s\n", yytext );  
+"defvar"|"deflist"|"if"|"else"|"else if"|"and"|"or"|"not"|"loop" {
+	printf( "A keyword: %s\n", yytext);
+	insertIntoProgramInternalForm(yytext, "-1", yyleng);
+} 
 
 
-{ID} 		printf( "An identifier: %s\n", yytext ); 
+{ID} {
+	printf( "An identifier: %s\n", yytext ); 
+	insertIntoProgramInternalForm("id", insertIntoSymbolTable( yytext, yyleng ), 2);
+}
 
-{STRING} printf("A string: %s\n", yytext);
+{STRING} {
+	printf("A string: %s\n", yytext);
+	insertIntoProgramInternalForm("const", insertIntoSymbolTable(yytext, yyleng), 5);
+}
 
-"+"|"-"|"*"|"/"|"%"|"="|"<"|">"|"<="|">="|"+="|"-="|"++"|"--"|"**" printf( "An operator: %s\n", yytext ); 
+"+"|"-"|"*"|"/"|"%"|"="|"<"|">"|"<="|">="|"+="|"-="|"++"|"--"|"**" {
+	printf( "An operator: %s\n", yytext ); 
+	insertIntoProgramInternalForm(yytext, "-1", yyleng);
+}
 
-";"|"["|"]"|"{"|"}"|"("|")"|","|":" printf("A separator: %s\n", yytext);
+";"|"["|"]"|"{"|"}"|"("|")"|","|":" {
+	printf("A separator: %s\n", yytext);
+	insertIntoProgramInternalForm(yytext, "-1", yyleng);
+}
 
 "{"[^}\n]*"}" 		/* eat up one-line comments */ 
 
 [ \t\n]+ 		/* eat up whitespace */ 
 		 
 . printf("Error: %s\n", yytext);
+
 %% 
 main( argc, argv ) 
 int argc; 
@@ -41,4 +134,6 @@ char **argv;
     else 
      yyin = stdin; 
     yylex(); 
+	printProgramInternalForm();
+	printSymbolTable();
 } 

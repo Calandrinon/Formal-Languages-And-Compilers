@@ -485,8 +485,77 @@ char *yytext;
 #line 1 "language_specification.lxi"
 #line 3 "language_specification.lxi"
 #include <math.h> 
-#line 489 "lex.yy.c"
-#line 490 "lex.yy.c"
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <stdio.h>
+
+struct ProgramInternalFormNode {
+	char key[100];
+	char value[100];
+};
+
+struct SymbolTableNode {
+	char key[100];
+	int value;
+};
+
+struct ProgramInternalFormNode ProgramInternalForm[1000];
+struct SymbolTableNode SymbolTable[100];
+
+int k = 0;
+int symbolTableIndex = 0;
+
+char* insertIntoSymbolTable(char* text, int length){
+	char key[100];
+	
+	strncpy(key, text, length);
+	
+	key[length] = '\0';
+	
+	for(int i = 0; i < symbolTableIndex; i++){
+		if(!strcmp(SymbolTable[i].key, key)){
+			char buffer[10];
+ 			sprintf(buffer, "%d", SymbolTable[i].value);
+ 			char* p = buffer;
+ 			return p;
+ 		}
+	}
+	
+	struct SymbolTableNode node;
+	strcpy(node.key, key);
+	node.value = symbolTableIndex;
+	SymbolTable[symbolTableIndex++] = node;
+	
+	char buffer[10];
+	
+	sprintf(buffer, "%d", SymbolTable[symbolTableIndex - 1].value);
+	char* p = buffer;
+	return p;
+	}
+	void printSymbolTable(){
+	printf("\nSymbolTable\n");
+	for(int i = 0; i < symbolTableIndex; i++){
+		printf("%s %d\n", SymbolTable[i].key, SymbolTable[i].value);
+	}
+}
+
+void insertIntoProgramInternalForm(char* text, char* value, int length){
+	struct ProgramInternalFormNode node;
+	strncpy(node.key, text, length);
+	strcpy(node.value, value);
+	node.key[length] = '\0';
+	ProgramInternalForm[k++] = node;
+}
+
+void printProgramInternalForm() {
+	printf("\nProgramInternalForm\n");
+	for(int i = 0; i < k; i++)
+ 		printf("%s %s\n", ProgramInternalForm[i].key, ProgramInternalForm[i].value);
+}
+
+#line 558 "lex.yy.c"
+#line 559 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -703,10 +772,10 @@ YY_DECL
 		}
 
 	{
-#line 10 "language_specification.lxi"
+#line 79 "language_specification.lxi"
 
 
-#line 710 "lex.yy.c"
+#line 779 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -765,66 +834,87 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 12 "language_specification.lxi"
-printf( "An integer: %s (%d)\n", yytext, atoi( yytext ) ); 
+#line 81 "language_specification.lxi"
+{ 
+				printf( "An integer: %s (%d)\n", yytext, atoi( yytext ));
+				insertIntoProgramInternalForm("const", insertIntoSymbolTable(yytext, yyleng ), 5);
+			}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 14 "language_specification.lxi"
-printf( "A float: %s (%g)\n", yytext, atof( yytext ) );  
+#line 86 "language_specification.lxi"
+{ 
+						printf( "A float: %s (%g)\n", yytext, atof( yytext ) ); 
+						insertIntoProgramInternalForm("const", insertIntoSymbolTable(yytext, yyleng), 5);
+					 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 15 "language_specification.lxi"
+#line 91 "language_specification.lxi"
 printf("A comment: \"%s\"\n", yytext);
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "language_specification.lxi"
-printf( "A keyword: %s\n", yytext );  
+#line 93 "language_specification.lxi"
+{
+	printf( "A keyword: %s\n", yytext);
+	insertIntoProgramInternalForm(yytext, "-1", yyleng);
+} 
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 20 "language_specification.lxi"
-printf( "An identifier: %s\n", yytext ); 
+#line 99 "language_specification.lxi"
+{
+	printf( "An identifier: %s\n", yytext ); 
+	insertIntoProgramInternalForm("id", insertIntoSymbolTable( yytext, yyleng ), 2);
+}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 22 "language_specification.lxi"
-printf("A string: %s\n", yytext);
+#line 104 "language_specification.lxi"
+{
+	printf("A string: %s\n", yytext);
+	insertIntoProgramInternalForm("const", insertIntoSymbolTable(yytext, yyleng), 5);
+}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 24 "language_specification.lxi"
-printf( "An operator: %s\n", yytext ); 
+#line 109 "language_specification.lxi"
+{
+	printf( "An operator: %s\n", yytext ); 
+	insertIntoProgramInternalForm(yytext, "-1", yyleng);
+}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 26 "language_specification.lxi"
-printf("A separator: %s\n", yytext);
+#line 114 "language_specification.lxi"
+{
+	printf("A separator: %s\n", yytext);
+	insertIntoProgramInternalForm(yytext, "-1", yyleng);
+}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 28 "language_specification.lxi"
+#line 119 "language_specification.lxi"
 /* eat up one-line comments */ 
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 30 "language_specification.lxi"
+#line 121 "language_specification.lxi"
 /* eat up whitespace */ 
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 32 "language_specification.lxi"
+#line 123 "language_specification.lxi"
 printf("Error: %s\n", yytext);
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 33 "language_specification.lxi"
+#line 125 "language_specification.lxi"
 ECHO;
 	YY_BREAK
-#line 828 "lex.yy.c"
+#line 918 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1829,7 +1919,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 33 "language_specification.lxi"
+#line 125 "language_specification.lxi"
 
 main( argc, argv ) 
 int argc; 
@@ -1841,5 +1931,7 @@ char **argv;
     else 
      yyin = stdin; 
     yylex(); 
+	printProgramInternalForm();
+	printSymbolTable();
 } 
 
