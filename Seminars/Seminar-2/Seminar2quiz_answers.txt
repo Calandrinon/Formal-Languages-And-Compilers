@@ -1,6 +1,0 @@
-1. All the strings containing 1s and 2s
-2. Yes, it is a correct representation, because it covers all possible cases of strings containing the digits from 0 to 9. Therefore, no sign is needed, because natural numbers are unsigned. 
-3. int, main, (, int, a, ,, b, ), ;
-  Total number of tokens: 9 (unless we consider spaces to be tokens as well, in which case we would have 11 tokens)
-4. The output of scanning is the program internal form and the symbol table. The PIF contains reserved words, separators and operators, while the ST contains identifiers and constants.
-5. A lexical error is strictly related to tokens that cannot be classified. Therefore, a keyword which is missing a letter is an unclassifiable token that results in a lexical error.
