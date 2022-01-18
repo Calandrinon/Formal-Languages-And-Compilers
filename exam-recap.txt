@@ -65,8 +65,52 @@ Lecture 7:
 		for any alpha such that S => u A alpha 
 	- steps for the LL(1) parser:
 		1.) construct FIRST and FOLLOW
-		2.) construct LL(1) parse table
+			ex. FIRST
+				E -> T E'
+				E' -> + T E' | epsilon
+				T -> F T'
+				T' -> * F T' | epsilon
+				F -> ( E ) | id
+
+			FIRST(A) = FIRST(T) = FIRST(F) = {(, id}
+			
+			ex. FOLLOW
+			a.) if E is the start symbol, put $ in FOLLOW(E)	
+			b.) productions of the form  B -> alpha A beta  => FOLLOW(A) = FIRST(beta) 
+			c.) productions of the form  B -> alpha A | alpha A beta  where beta (star derivation) epsilon  => add FOLLOW(A) = FOLLOW(B) 
+			
+				E -> T E'
+				E' -> + T E' | epsilon
+				T -> F T'
+				T' -> * F T' | epsilon
+				F -> ( E ) | id
+
+			FOLLOW(E) = {$, )}
+			FOLLOW(E') = FOLLOW(E) = {$, )} 
+			FOLLOW(T) = {+} U FOLLOW(E') = {+, $, )} 
+			FOLLOW(T') = FOLLOW(T) = {+, $, )} 
+			FOLLOW(F) = {*} U FOLLOW(T') = {*, +, $, )}
+
+			A FOLLOW set cannot contain epsilon
+
+
+		2.) construct LL(1) parse table	
+		We go through each production and the FIRST set of the non-terminal of the left-hand side. We write the production in each cell of the table on the current row where the column contains a symbol included in the FIRST set.
+		If the FIRST set contains epsilon, we take the FOLLOW of the left-hand side non-terminal and we place the production on the columns associated with the symbols inside the FOLLOW set.
+
+		There can only be 1 production in a cell of the table, otherwise there is a conflict, which means that the grammar is not LL(1)
+
+
 		3.) analyse sequence based on moves between configurations
+			Take the input string and place a $ at the end of the string.			
+			We have a stack on which we push at first the starting symbol.
+			We write in the output the production from the row corresponding to the non-terminal from the top of the stack and the column corresponding to the symbol from the input string.
+			We pop the top of the stack and we push the right-hand side of the previously outputted production.
+			If the top of the stack and the current symbol in the input are the same, we have a match => we pop the top of the stack and we discard the current symbol from the input string.
+			This is repeated until the working stack and input stack are empty.	If we get stuck (no match can be established between the top of the working stack and the top of the input stack), the input cannot be matched.
+
+
+	- the difference between descendent recursive parsers and LL(k) parsers is that the LL(k) parser does not require backtracking and it examines the next k symbols to know  what production to apply
 	- LL(1) table: 1 line for each symbol belonging to {non-terminal, terminal, '$'}, 1 column for each symbol belonging to {terminal, '$'}
 	- table rules: 
 		1.) M(A, a) = (alpha, i), for any a belonging to FIRST(alpha), a != epsilon, A -> alpha production number i in P            
@@ -77,8 +121,97 @@ Lecture 7:
 	- a grammar is LL(1) if the table contains at most one value in each cell of the table i.e there are no conflicts
 	- LL(1) provides the location of the error and grammars can be transformed to be LL(1)
 
+
+Lecture 8:
+	- LR(K) parser => ascendent
+	- shift-reduce parser:
+		. shifts symbols to form handles
+		. when a right-hand side of a production is formed, we reduce to the corresponding left-hand side of the production 
+	- linear complexity
+	- live prefix: 
+		When we have a context-free grammar G=(N, T, P, S), S (star derivation) alpha A w => alpha beta w (alpha and beta contain non-terminals and terminals, A contains only non-terminals, w contains only terminals), then any prefix of sequence alpha beta is called a live prefix in G.
+	- LR(k) item is defined as [A -> alpha . beta, u] (where A -> alpha beta is a production, u is a sequence of terminals) and describes the moment in which, considering the production A -> alpha beta, alpha was detected (alpha is the head of the stack) and it is expected to detect beta. 
+	- LR(k) item [A -> alpha . beta, u] is valid for a live prefix (gamma alpha) if:
+		  *
+		S => gamma A w => gamma alpha beta w
+		u = FIRSTk(w)
+	- A context-free grammar G = (N, T, P, S) is LR(k), for k >= 0, if:
+			   *		
+		1.) S' => alpha A w => alpha beta w
+			   *		
+		2.) S' => gamma B x => alpha beta y
 		
+		3.) FIRSTk(w) = FIRSTk(y) 
+		===> alpha = gamma and A = B and x = y
+	
+	- apply reduce when [A -> alpha beta ., u] (prefix is the whole right-hand side of the production), otherwise apply shift in cases like [A -> alpha . beta, u]
+
+	- LR(k) table has 2 parts: the action part + the goto part
+	- a state contains all LR items (all items corresponding to the same live prefix) and the closure (goto is used to go from one state to another)
+	- LR(k) parsing:
+		1.) defining an item
+		2.) construct the set of states (which contain closures)
+		3.) construct the table (by using the canonical collection)
+		The sequence is parsed based on moves between configurations
+	- LR(0):
+			a.) action: one column (for a state, the action is unique because the prediction is ignored
+			b.) goto: one column for each symbol X which is either a non-terminals or a terminal
+	- a final item (one with the dot at the end of the right-hand side) is going to be written as accepted in the table on the $ column for actions
+	- A grammar is not LR(0) if the table contains conflicts:
+		1.) shift-reduce conflict: a state contains items of the form [A -> alpha . beta] and [B -> gamma .], yielding to 2 distinct actions for that state
+		2.) reduce-reduce conflict: when a state contains items of the form [A -> alpha beta .] and [B -> gamma .], in which the action is reduce, but with distinct productions	
+
+	- alpha = working stack; beta = input stack; pi = output stack
+	
+
+Lecture 9:
+	- LR(0), SLR, LR(1), LALR
+
+Lecture 10:
+	- lex & yacc
+
+Lecture 11:
+	- pushdown automata
+	- semantic analysis attaches meanings to syntactical constructions of a program
+	- attribute grammar:
+		. syntactical constructions (non-terminals) -> attributes
+			for any X (non-terminal or terminal): A(X)
+		. productions - rules to evaluate attributes 
+			for any p (production): R(p)
+	- AG = (G,A,R) - attribute grammar where:
+		1.) G is a context-free grammar
+		2.) A = {A(X) | X is a terminal or non-terminal} is a finite set of attributes
+		3.) R = {R(p) | p is a production} is a finite set of rules to compute/evaluate attributes
+
+Lecture 12:
+	- intermediary code generation
+	- representations:
+		1.) annotated tree
+		2.) polish postfix form
+		3.) 3-address code
+	- 3-address code is a sequence of simple format statement close to object code, with the following general form:
+		<result> = <arg1><op><arg2> 
+	- optimizing the intermediary code:
+		1.) local optimizations 
+			- perform computations at compile time
+			- eliminate redundant computations
+			- eliminate inaccessible code - if...then...else
+		2.) loop optimizations
+			- factorization of loop invariants
+			- reduce the power of operations
+			
+	- operation (j) is redundant to operation (i) with i < j if the 2 operations are identical and if the operands in (j) did not change in any operation between (i+1) and (j-1)
 
 
+Lecture 13:
+	- object code generation
+	- stack machine = stack (for storing and manipulating values)  + accumulator (for executing operations)
+	- statements:
+		1.) move and copy values in and from head of stack to accumulator
+		2.) operations on stack head, functioning as follows: operands are popped from stack, execute operation and then put the result in stack
+
+
+Lecture 14:
+	- Turing machines
 
 
